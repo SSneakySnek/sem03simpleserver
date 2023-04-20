@@ -1,2 +1,2 @@
 # sem03simpleserver
-Enkel server for manuell testing.
+Enkel server for manuell testingg.
