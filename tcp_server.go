@@ -3,16 +3,18 @@ package main
 import (
 	"io"
 	"log"
-	"mycrypt"
 	"net"
 	"sync"
+"github.com/SSneakySnek/is105sem03/mycrypt"
+
+
 )
 
 func main() {
 
 	var wg sync.WaitGroup
 
-	server, err := net.Listen("tcp", "172.17.0.3:16")
+	server, err := net.Listen("tcp", "172.17.0.2:16")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,16 +39,17 @@ func main() {
 						}
 						return // fra for løkke
 					}
-					switch msg := string(buf[:n]); msg {
-					case "ping":
+switch msg:= string(buf[:n]); msg {
+  				        case "ping":
 						_, err = c.Write([]byte("pong"))
 					default:
 						dekryptertMelding := mycrypt.Krypter([]rune(string(buf[:n])), mycrypt.ALF_SEM03, len(mycrypt.ALF_SEM03)-4)
 						log.Println("Dekrypter melding: ", string(dekryptertMelding))
 						switch msg := string(dekryptertMelding); msg {
-						// handle decrypted message here
+						case "ping":
+							_, err = c.Write([]byte("pong"))
 						default:
-							_, err = c.Write(buf[:n])
+							_, err = c.Write([]byte(msg))
 						}
 					}
 					if err != nil {
@@ -61,4 +64,3 @@ func main() {
 	}()
 	wg.Wait()
 }
-
